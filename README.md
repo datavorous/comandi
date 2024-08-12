@@ -1,10 +1,16 @@
+<div align="center"> 
+   
 # COMANDI v0.0.1
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/yourusername/comandi)
-![GitHub](https://img.shields.io/github/license/yourusername/comandi)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/comandi)
+</div>
 
-COMANDI is a command-line interface (CLI) tool designed to assist users in converting human instructions into command-line instructions and providing brief hints for programming questions. The tool integrates with the `MetaAI` API and leverages the `rich` library for a visually appealing user experience.
+COMANDI is an AI powered command-line interface (CLI) tool designed to assist users in converting human instructions into command-line instructions and providing brief hints for programming questions all **WITHOUT ANY API KEY!**
+
+---
+
+<div align="center"> 
+<img src="https://raw.githubusercontent.com/datavorous/GrudgePixel/main/demo/cute_.PNG" alt="Dwarf">
+</div>
 
 ## Features
 
@@ -20,7 +26,7 @@ To install and run COMANDI, ensure you have Python 3.x installed, then follow th
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/comandi.git
+   git clone https://github.com/datavorous/comandi.git
    cd comandi
    ```
 
@@ -42,7 +48,7 @@ COMANDI operates in an interactive session where the user inputs either a comman
    The program reads a prompt template from a `prompt.json` file. This template guides the AI in formulating responses.
 
 2. **User Input Processing:**  
-   The user is prompted to enter a request. The input is then passed to the `MetaAI` API, which generates a response based on the prompt template.
+   The user is prompted to enter a request. The input is then passed to the `MetaAI` API using the [meta-ai-api](https://github.com/Strvm/meta-ai-api) library, which generates a response based on the prompt template.
 
 3. **Response Parsing:**  
    The AI response is parsed into different components, including commands, descriptions, hints, and examples. These are then presented to the user in a structured and visually appealing manner.
@@ -87,7 +93,7 @@ Creates a new directory named 'new_directory' and then navigates into it.
   - `rich` for creating a styled CLI interface.
   - `subprocess` for executing shell commands.
   - `json` for handling the prompt template.
-  - `MetaAI` (custom API) for AI response generation.
+  - `meta-ai-api` for AI response generation.
 
 ## Contributing
 
@@ -95,8 +101,9 @@ Contributions are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) fi
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- Special thanks to the creators of the `rich` library for making CLI development visually stunning and accessible.
+- Thanks to [meta-ai-api](https://github.com/Strvm/meta-ai-api) library by [Roméo](https://github.com/Strvm)!
+- Special thanks to the creators of the `rich` library for making CLI development visually stunning and accessible. 
