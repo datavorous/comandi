@@ -9,7 +9,7 @@ COMANDI is an AI powered command-line interface (CLI) tool designed to assist us
 ---
 
 <div align="center"> 
-<img src="https://raw.githubusercontent.com/datavorous/comandi/main/demo.gif" alt="demo">
+<img src="https://raw.githubusercontent.com/datavorous/comandi/main/demo1.gif" alt="demo">
 </div>
 
 ## Features
