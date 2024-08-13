@@ -12,7 +12,7 @@ A Free API-Keyless AI-powered CLI for automated instruction translation and prog
 ## ✨ Demo Showcase
 
 <div align="center"> 
-<img src="https://raw.githubusercontent.com/datavorous/comandi/main/demo1.gif" alt="demo">
+<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/pair_programming.gif" alt="demo">
 </div>
 
 
