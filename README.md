@@ -97,11 +97,12 @@ COMANDI offers a range of functionalities to assist with command-line operations
      You can request analysis by specifying the desired action and the file path. For example:
      ```
      understand path/to/your/file.py
+     understand path/to/your/file.py:10-15,27-48
      debug path/to/your/file.py
      fix path/to/your/file.py
      ```
      **What happens next:**  
-     COMANDI will analyze the file based on your request, providing a summary, potential improvements, debugging tips, and code fixes, as applicable.
+     COMANDI will analyze the file based on your request, providing a summary, potential improvements, debugging tips, and code fixes, as applicable. By mentioning the line ranges you can specify the only required lines which need to be checked.
 
 ### 4. **Exiting the Program:**
    - **Purpose:** End your COMANDI session.
