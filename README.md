@@ -21,7 +21,7 @@ COMANDI translates natural language into precise command-line instructions.
 Get concise programming hints and code snippets for various languages and concepts.
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/5.PNG" width="48%" />
+  <img src="" width="48%" />
   <img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/2.PNG" width="48%" /> 
 </p>
 
