@@ -50,20 +50,7 @@ To install and run COMANDI, ensure you have Python 3.x installed, then follow th
    ```bash
    python main.py
    ```
-
-## How It Works 🛠️
-
-COMANDI operates in an interactive session where the user inputs either a command-line request or a programming question. The program processes this input through the following steps:
-
-1. **Loading the Prompt Template:**  
-   The program reads a prompt template from a `prompt.json` file. This template guides the AI in formulating responses.
-2. **User Input Processing:**  
-   The user is prompted to enter a request. The input is then passed to the `MetaAI` API using the [meta-ai-api](https://github.com/Strvm/meta-ai-api) library, which generates a response based on the prompt template.
-3. **Response Parsing:**  
-   The AI response is parsed into different components, including commands, descriptions, hints, and examples. These are then presented to the user in a structured and visually appealing manner.
-4. **Command Execution (Optional):**  
-   If the AI response includes a command, the user is given the option to execute it directly from the interface. The output is displayed in real-time.
-
+   
 ## Usage 🚀
 
 COMANDI offers a range of functionalities to assist with command-line operations, programming hints, and file analysis. Below is a step-by-step guide to using these capabilities:
@@ -117,43 +104,6 @@ COMANDI offers a range of functionalities to assist with command-line operations
   - `subprocess` for executing shell commands.
   - `json` for handling the prompt template.
   - `meta-ai-api` for AI response generation.
-
-## Prompt Analysis 🔍
-
-The `prompt.json` file is the backbone of the AI's functionality, defining how it processes different types of user inputs. Here's an in-depth look:
-
-1. **Triple Functionality:** The AI is equipped to handle three primary tasks:
-   - **Command-Line Conversion:** Translating human instructions into command-line commands.
-   - **Programming Hints:** Offering concise tips with example code snippets.
-   - **File Analysis:** Understanding, debugging, and fixing code files based on user input.
-
-2. **Response Format:**
-   - **For Command-Line Instructions:**
-     ```
-     COMMAND: <command-line instruction>
-     DESCRIPTION: <brief description of what the command does>
-     ```
-     - **Fallback:** If the AI is unable to generate a command, it replies with:
-     ```
-     COMMAND: UNABLE_TO_PROCESS
-     DESCRIPTION: I couldn't generate a command-line instruction for that request.
-     ```
-   - **For Programming Hints:**
-     ```
-     HINT: <one-line programming hint>
-     EXAMPLE: <A code snippet showing an implementation of the given problem.>
-     ```
-   - **For File Analysis:**
-     ```
-     SUMMARY: <Brief summary of the file contents>
-     IMPROVEMENTS: <Point-wise list of improvement suggestions, including fixing vulnerabilities.>
-     DEBUGGING TIPS: <Suggestions for debugging, if relevant.>
-     CODE FIXES: <Specific line-by-line code fixes, if needed.>
-     ```
-
-3. **Contextual Awareness:** The AI determines whether the input pertains to command-line instructions, programming questions, or file analysis based on the context provided.
-
-4. **Emphasis on Brevity:** The AI is designed to provide concise, focused responses, especially in the case of programming hints, ensuring that the output is both clear and actionable.
 
 ## Roadmap 🗺️
 
