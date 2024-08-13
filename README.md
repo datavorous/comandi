@@ -2,28 +2,13 @@
 
 COMANDI is an AI-powered command-line interface (CLI) tool designed to assist users in converting human instructions into command-line instructions and providing brief hints for programming questions all **WITHOUT ANY API KEY!** 🔑❌
 
----
+
+## ✨ Demo Showcase
+
 <div align="center"> 
 <img src="https://raw.githubusercontent.com/datavorous/comandi/main/demo1.gif" alt="demo">
 </div>
 
-## ✨ Demo Showcase
-
-### Command-line Instruction Conversion 🌟
-COMANDI translates natural language into precise command-line instructions.
-
-<p float="left">
-  <img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/1.PNG" width="48%" />
-  <img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/4.PNG" width="48%" /> 
-</p>
-
-### Programming Hints and Examples 🌟
-Get concise programming hints and code snippets for various languages and concepts.
-
-<p float="left">
-  <img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/6.PNG" width="48%" />
-  <img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/2.PNG" width="48%" /> 
-</p>
 
 ## Features 🌟
 
