@@ -27,11 +27,7 @@ the function catches these exceptions and displays an appropriate error message 
 '''
 def load_prompt():
     try:
-        
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        prompt_file_path = os.path.join(script_dir, 'prompt.json')
-        
-        with open(prompt_file_path, 'r') as file:
+        with open('prompt.json', 'r') as file:
             data = json.load(file)
             return data['prompt_template']
     except FileNotFoundError:
