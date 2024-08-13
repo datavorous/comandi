@@ -6,6 +6,7 @@
 
 Free API-Keyless AI-powered CLI for Programming Support, Error Debugging and Automated Instruction Translations. 
 
+<a href="https://app.commanddash.io/agent/github_datavorous_comandi"><img src="https://img.shields.io/badge/AI-Code%20Agent-EB9FDA"></a>
 ![Python version](https://img.shields.io/badge/python-3.10%2B-blue)
 </div>
 
