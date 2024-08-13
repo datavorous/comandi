@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/favicon.png" alt="Logo" width="128" height="128">  
 
-# COMANDI v0.0.1 🚀
+# COMANDI v0.0.2 🚀
 
 A Free API-Keyless AI-powered CLI for automated instruction translation and programming support. 
 
@@ -12,7 +12,13 @@ A Free API-Keyless AI-powered CLI for automated instruction translation and prog
 ## ✨ Demo Showcase
 
 <div align="center"> 
-<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/pair_programming.gif" alt="demo">
+   
+<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/pair_programming.gif" alt="debugging code using it" width="80%">  <br>
+   <b>👨‍💻 Fix your code and understand the errors, from the comfort of your terminal!</b><br><br>
+   
+<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/cmd_ins.gif" alt="running cmds from terminal" width="80%"><br>
+   <b>🐸 Execute command line instructions without remembering any of those!</b><br>
+
 </div>
 
 
