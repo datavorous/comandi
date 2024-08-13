@@ -41,9 +41,6 @@ def load_prompt():
         sys.exit(1)
 
 
-
-
-
 '''
 prints an introductory message to the user when the program starts. 
 creates a styled text block with the program's version, guidelines on how to use the CLI, and commands available to the user. The text is centered and wrapped in a Rich Panel, which is then printed to the console.
@@ -132,20 +129,26 @@ def parse_ai_response(response):
 
     return result
 
-def read_file_contents(file_path):
-    """Read and return the contents of a file."""
+def read_file_contents(file_path, line_numbers=None):
+    """Read and return the contents of a file. Optionally read only specified line numbers."""
     try:
         with open(file_path, 'r') as file:
-            return file.read()
+            lines = file.readlines()
+            if line_numbers:
+                selected_lines = [lines[i-1] for i in line_numbers if 0 <= i-1 < len(lines)]
+                return ''.join(selected_lines)
+            else:
+                return ''.join(lines)
     except FileNotFoundError:
         return f"Error: File '{file_path}' not found."
     except Exception as e:
         return f"Error reading file: {str(e)}"
 
 
-def analyze_file(file_path, analysis_type):
-    """Analyze file contents based on the analysis type."""
-    content = read_file_contents(file_path)
+
+def analyze_file(file_path, analysis_type, line_range=None):
+    """Analyze file contents based on the analysis type and specific line numbers."""
+    content = read_file_contents(file_path, line_numbers=line_range)
     if content.startswith("Error:"):
         return content
 
@@ -164,6 +167,7 @@ def analyze_file(file_path, analysis_type):
 
 
 
+
 def display_file_analysis(analysis_result):
     """Display file analysis results using Rich panels."""
     for section, content in analysis_result.items():
@@ -177,22 +181,38 @@ def display_file_analysis(analysis_result):
             console.print(panel)
 
 
+def parse_ranges(range_str):
+    """Parse a string of line ranges (e.g., '10-20,25-29') into a list of line numbers."""
+    ranges = range_str.split(',')
+    line_numbers = []
+    for r in ranges:
+        start_line, end_line = map(int, r.split('-'))
+        line_numbers.extend(range(start_line, end_line + 1))
+    return line_numbers
+
+
+
 '''
 This function handles file-related commands by determining the type of analysis requested (understand, debug, or fix) and then calling analyze_file() to perform the analysis. If the file does not exist, it prints an error message. If the analysis is successful, it uses display_file_analysis() to show the results to the user. This function serves as a central hub for managing file-related tasks within the program.
 '''
-def handle_file_command(command, file_path):
-    """Handle file-related commands."""
-    if not os.path.exists(file_path):
-        console.print(f"[bold red]Error:[/bold red] File '{file_path}' not found.")
-        return
-
-    analysis_type = command.split()[0]
-    analysis_result = analyze_file(file_path, analysis_type)
+def handle_file_command(command, file_path_and_lines):
+    """Handle file-related commands with optional line range."""
+    if ':' in file_path_and_lines:
+        file_path, line_range_str = file_path_and_lines.split(':')
+        line_numbers = parse_ranges(line_range_str)
+        analysis_type = command.split()[0]
+        analysis_result = analyze_file(file_path, analysis_type, line_range=line_numbers)
+    else:
+        file_path = file_path_and_lines
+        analysis_type = command.split()[0]
+        analysis_result = analyze_file(file_path, analysis_type)
     
     if isinstance(analysis_result, str) and analysis_result.startswith("Error:"):
         console.print(f"[bold red]{analysis_result}[/bold red]")
     else:
         display_file_analysis(analysis_result)
+
+
 
 
 
@@ -208,9 +228,6 @@ def main():
     print_introduction()
 
     try:
-        # the best part of the whole code
-        # this analysis the response and creates the panel accordingly 
-        # very easy to add more functionality this way, might be better methods of doing so, but im not going to think much
         while True:
             user_input = Prompt.ask(Text("::", style="green1"))
 
@@ -219,11 +236,8 @@ def main():
                 break
 
             if user_input.startswith(('understand ', 'debug ', 'fix ')):
-                command, *file_path = user_input.split(maxsplit=1)
-                if file_path:
-                    handle_file_command(command, file_path[0])
-                else:
-                    console.print("[bold red]Error:[/bold red] Please provide a file path.")
+                command, file_path_and_lines = user_input.split(maxsplit=1)
+                handle_file_command(command, file_path_and_lines)
             else:
                 try:
                     ai_response = get_ai_response(user_input, prompt_template)
@@ -286,6 +300,8 @@ def main():
     except KeyboardInterrupt:
         console.print(Panel(Text("🔚 Session ended by user.", style="bold cyan"), border_style="bold cyan"))
         sys.exit(0)
+
+
 
 
 if __name__ == "__main__":
