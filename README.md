@@ -1,7 +1,13 @@
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/favicon.png" alt="Logo" width="128" height="128">  
+
 # COMANDI v0.0.1 🚀
 
-COMANDI is an AI-powered command-line interface (CLI) tool designed to assist users in converting human instructions into command-line instructions and providing brief hints for programming questions all **WITHOUT ANY API KEY!** 🔑❌
+A Free API-Keyless AI-powered CLI for automated instruction translation and programming support. 
 
+![Python version](https://img.shields.io/badge/python-3.10%2B-blue)
+</div>
 
 ## ✨ Demo Showcase
 
