@@ -4,7 +4,7 @@
 
 # COMANDI v0.0.2 🚀
 
-A Free API-Keyless AI-powered CLI for automated instruction translation and programming support. 
+Free API-Keyless AI-powered CLI for Programming Support, Error Debugging and Automated Instruction Translations. 
 
 ![Python version](https://img.shields.io/badge/python-3.10%2B-blue)
 </div>
@@ -25,10 +25,12 @@ A Free API-Keyless AI-powered CLI for automated instruction translation and prog
 ## Features 🌟
 
 - 🖥️ **Command-line Instruction Conversion:** Translates human language into precise command-line instructions with descriptions.
+- 👨‍💻 **Bug Fixer/Debugger:** Provides to the point solutions to bugs and vulnerabilities by analyzing your program file.
 - 💡 **Programming Hints:** Provides concise hints for programming problems, along with example code snippets.
 - 🎨 **Interactive Interface:** Engages users with an interactive CLI powered by the `rich` library, featuring styled panels and prompts.
 - ⚡ **Command Execution:** Offers the ability to execute shell commands directly from the interface and view the output in real-time.
 - 🔧 **Configurable Prompt Template:** The prompt template is stored in a JSON file, making it easy to modify and extend.
+- 🛠️ **File Analysis:** Understands, debugs, and fixes code by analyzing file contents, providing summaries, debugging tips, and code fixes.
 
 ## Installation 📦
 
@@ -63,30 +65,47 @@ COMANDI operates in an interactive session where the user inputs either a comman
 
 ## Usage 🚀
 
-- **Command-line Instruction:**  
-  Enter a request like:
-  ```
-  Create a new directory and navigate into it.
-  ```
-  The program will generate the corresponding command and description.
-- **Programming Hint:**  
-  Ask a programming question, such as:
-  ```
-  How do I sort a list in Python?
-  ```
-  COMANDI will provide a brief hint and a code snippet.
-- **Exiting the Program:**  
-  Type `quit` or `exit` to end the session.
+COMANDI offers a range of functionalities to assist with command-line operations, programming hints, and file analysis. Below is a step-by-step guide to using these capabilities:
 
-## Example Session 💻
+### 1. **Command-line Instruction:**
+   - **Purpose:** Convert natural language instructions into executable command-line commands.
+   - **Example:**  
+     You can input a request like:
+     ```
+     Create a new directory and navigate into it.
+     ```
+     **What happens next:**  
+     COMANDI will generate the corresponding command and a brief description explaining its function.
 
-```
-:: Create a new directory and navigate into it.
-🛠️ Command:
-mkdir new_directory && cd new_directory
-📄 Description:
-Creates a new directory named 'new_directory' and then navigates into it.
-```
+   - **Execution:**  
+     After the command is generated, you'll have the option to execute it directly from the interface. Simply respond with `y` when prompted, and the command will run, with the output displayed in the terminal.
+
+### 2. **Programming Hint:**
+   - **Purpose:** Get quick tips and example code snippets for programming questions.
+   - **Example:**  
+     You might ask:
+     ```
+     How do I sort a list in Python?
+     ```
+     **What happens next:**  
+     COMANDI will provide a one-line hint and an example code snippet, including comments explaining each step of the implementation.
+
+### 3. **File Analysis:**
+   - **Purpose:** Analyze file contents for understanding, debugging, or fixing code.
+   - **How to use:**  
+     You can request analysis by specifying the desired action and the file path. For example:
+     ```
+     understand path/to/your/file.py
+     debug path/to/your/file.py
+     fix path/to/your/file.py
+     ```
+     **What happens next:**  
+     COMANDI will analyze the file based on your request, providing a summary, potential improvements, debugging tips, and code fixes, as applicable.
+
+### 4. **Exiting the Program:**
+   - **Purpose:** End your COMANDI session.
+   - **How to exit:**  
+     Type `quit` or `exit` to close the program.
 
 ## Technical Details 🔧
 
@@ -99,51 +118,50 @@ Creates a new directory named 'new_directory' and then navigates into it.
 
 ## Prompt Analysis 🔍
 
-The `prompt.json` file contains a crucial template that guides the AI's responses. Let's break it down:
+The `prompt.json` file is the backbone of the AI's functionality, defining how it processes different types of user inputs. Here's an in-depth look:
 
-1. **Dual Functionality:** The prompt defines two main tasks for the AI:
-   - Converting human instructions to command-line instructions
-   - Providing brief hints for programming questions
+1. **Triple Functionality:** The AI is equipped to handle three primary tasks:
+   - **Command-Line Conversion:** Translating human instructions into command-line commands.
+   - **Programming Hints:** Offering concise tips with example code snippets.
+   - **File Analysis:** Understanding, debugging, and fixing code files based on user input.
 
 2. **Response Format:**
-   - For command-line instructions:
+   - **For Command-Line Instructions:**
      ```
      COMMAND: <command-line instruction>
      DESCRIPTION: <brief description of what the command does>
      ```
-   - For programming hints:
+     - **Fallback:** If the AI is unable to generate a command, it replies with:
+     ```
+     COMMAND: UNABLE_TO_PROCESS
+     DESCRIPTION: I couldn't generate a command-line instruction for that request.
+     ```
+   - **For Programming Hints:**
      ```
      HINT: <one-line programming hint>
      EXAMPLE: <A code snippet showing an implementation of the given problem.>
      ```
+   - **For File Analysis:**
+     ```
+     SUMMARY: <Brief summary of the file contents>
+     IMPROVEMENTS: <Point-wise list of improvement suggestions, including fixing vulnerabilities.>
+     DEBUGGING TIPS: <Suggestions for debugging, if relevant.>
+     CODE FIXES: <Specific line-by-line code fixes, if needed.>
+     ```
 
-3. **Contextual Understanding:** The AI is instructed to determine whether the input is a command-line request or a programming question based on context.
+3. **Contextual Awareness:** The AI determines whether the input pertains to command-line instructions, programming questions, or file analysis based on the context provided.
 
-4. **Fallback Mechanism:** If unable to process a command-line instruction, it responds with:
-   ```
-   COMMAND: UNABLE_TO_PROCESS
-   DESCRIPTION: I couldn't generate a command-line instruction for that request.
-   ```
-
-5. **Conciseness:** The prompt emphasizes brevity, especially for programming hints, requesting "one-line" tips.
-
-This structured prompt ensures consistent, targeted responses from the AI, enhancing the user experience and maintaining the tool's focus.
+4. **Emphasis on Brevity:** The AI is designed to provide concise, focused responses, especially in the case of programming hints, ensuring that the output is both clear and actionable.
 
 ## Roadmap 🗺️
 
 Here's our planned roadmap for future COMANDI development:
 
-1. **User Preferences** 🎛️
-   - Implement user-specific settings (e.g., preferred shell, programming language)
+1. **User Preferences** 🎛️ : Implement user-specific settings (e.g., preferred shell, programming language)
 
-2. **Command History** 📜
-   - Add a feature to save and recall previous commands and responses
+2. **Command History** 📜 : Add a feature to save and recall previous commands and responses
 
-3. **Interactive Tutorials** 📚
-   - Develop interactive CLI tutorials for various programming concepts and tools
-
-4. **Integration with Version Control Systems** 🔄
-    - Add features to interact with git and other VCS directly from COMANDI
+3. **Integration with Version Control Systems** 🔄: Add features to interact with git and other VCS directly from COMANDI
 
 ## Contributing 🤝
 
@@ -157,7 +175,5 @@ This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE
 
 - Thanks to [meta-ai-api](https://github.com/Strvm/meta-ai-api) library by [Roméo](https://github.com/Strvm)!
 - Special thanks to the creators of the `rich` library for making CLI development visually stunning and accessible.
-
-
 
 We're excited about the future of COMANDI and welcome community input on these plans!
