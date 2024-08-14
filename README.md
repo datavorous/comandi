@@ -32,6 +32,9 @@ Free API-Keyless AI-powered CLI for Programming Support, Error Debugging and Aut
 - ⚡ **Command Execution:** Offers the ability to execute shell commands directly from the interface and view the output in real-time.
 - 🔧 **Configurable Prompt Template:** The prompt template is stored in a JSON file, making it easy to modify and extend.
 - 🛠️ **File Analysis:** Understands, debugs, and fixes code by analyzing file contents, providing summaries, debugging tips, and code fixes.
+Here's the modified part of the installation section with instructions for locally building and installing the package:
+
+---
 
 ## Installation 📦
 
@@ -42,14 +45,36 @@ To install and run COMANDI, ensure you have Python 3.x installed, then follow th
    git clone https://github.com/datavorous/comandi.git
    cd comandi
    ```
-2. Install the required dependencies:
+
+2. **Build the Package**
+
+   Use `setuptools` to build your package:
+
+   1. **Install necessary tools:**
+      ```bash
+      pip install setuptools wheel 
+      ```
+
+   2. **Build the source distribution and wheel:**
+      ```bash
+      python setup.py sdist bdist_wheel
+      ```
+
+      This will generate distribution archives in the `dist/` directory.
+
+3. **Install the Package**
+
+   Use `pip` to install the package globally:
    ```bash
-   pip install -r requirements.txt
+   pip install .
    ```
-3. Run the program:
+4. **Run from anywhere**  
+   Use ```comandi -run``` to run it from anywhere.
    ```bash
-   python main.py
+   comandi -run
    ```
+
+This section now guides the user through the process of locally building and installing the package.
    
 ## Usage 🚀
 
