@@ -73,8 +73,6 @@ To install and run COMANDI, ensure you have Python 3.x installed, then follow th
    ```bash
    comandi -run
    ```
-
-This section now guides the user through the process of locally building and installing the package.
    
 ## Usage 🚀
 
