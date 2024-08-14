@@ -1,10 +1,11 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/favicon.png" alt="Logo" width="128" height="128">  
+<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/banner.png" alt="Logo" width="450" height="225" >  
 
-# COMANDI v0.0.2 🚀
+# COMANDI v0.0.2 
 
-Free API-Keyless AI-powered CLI for Programming Support, Error Debugging and Automated Instruction Translations. 
+Free AI-powered CLI for Programming Support,  
+Error Debugging and Automated Instruction Translations. 
 
 <a href="https://app.commanddash.io/agent/github_datavorous_comandi"><img src="https://img.shields.io/badge/AI-Code%20Agent-EB9FDA"></a>
 ![Python version](https://img.shields.io/badge/python-3.10%2B-blue)
