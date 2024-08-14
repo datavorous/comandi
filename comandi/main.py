@@ -3,7 +3,7 @@ The core functionality of the program includes converting human instructions to 
 The program follows a loop that continuously prompts the user for input until the user decides to exit. Depending on the type of user input, the program will either 
 execute a command, analyze a file, or provide hints and examples.
 '''
-
+import pkg_resources
 import sys
 import subprocess
 import json
@@ -27,7 +27,8 @@ the function catches these exceptions and displays an appropriate error message 
 '''
 def load_prompt():
     try:
-        with open('prompt.json', 'r') as file:
+        prompt_path = pkg_resources.resource_filename('comandi', 'prompt.json')
+        with open(prompt_path, 'r') as file:
             data = json.load(file)
             return data['prompt_template']
     except FileNotFoundError:
@@ -222,87 +223,89 @@ Depending on the input, it either handles file-related commands, sends the input
 The main function ensures that the program operates as an interactive tool, responding to user input in real-time and handling various tasks as specified by the user.
 '''
 def main():
-    """Main function to run the CLI interface."""
-    prompt_template = load_prompt()
+    if len(sys.argv) > 1 and sys.argv[1] == '-run':
+        prompt_template = load_prompt()
+        print_introduction()
 
-    print_introduction()
+        try:
+            while True:
+                user_input = Prompt.ask(Text("::", style="green1"))
 
-    try:
-        while True:
-            user_input = Prompt.ask(Text("::", style="green1"))
+                if user_input.lower() in ['quit', 'exit']:
+                    console.print(Text("🚀 Goodbye! 👋 See you soon!", style="bold red1"))
+                    break
 
-            if user_input.lower() in ['quit', 'exit']:
-                console.print(Text("🚀 Goodbye! 👋 See you soon!", style="bold red1"))
-                break
+                if user_input.startswith(('understand ', 'debug ', 'fix ')):
+                    command, file_path_and_lines = user_input.split(maxsplit=1)
+                    handle_file_command(command, file_path_and_lines)
+                else:
+                    try:
+                        ai_response = get_ai_response(user_input, prompt_template)
 
-            if user_input.startswith(('understand ', 'debug ', 'fix ')):
-                command, file_path_and_lines = user_input.split(maxsplit=1)
-                handle_file_command(command, file_path_and_lines)
-            else:
-                try:
-                    ai_response = get_ai_response(user_input, prompt_template)
-
-                    if ai_response['type'] == 'hint':
-                        hint_panel = Panel(
-                            Text(ai_response['hint'], style="white"),
-                            title="💡 Programming Hint:",
-                            border_style="bold spring_green1",
-                            style="white"
-                        )
-                        console.print(hint_panel)
-                        
-                        if 'example' in ai_response:
-                            example_panel = Panel(
-                                Text(ai_response['example'], style="white"),
-                                title="📚 Example:",
-                                border_style="bold deep_pink3",
+                        if ai_response['type'] == 'hint':
+                            hint_panel = Panel(
+                                Text(ai_response['hint'], style="white"),
+                                title="💡 Programming Hint:",
+                                border_style="bold spring_green1",
                                 style="white"
                             )
-                            console.print(example_panel)
-
-                    elif ai_response['type'] == 'command':
-                        if ai_response.get('command') == 'UNABLE_TO_PROCESS':
-                            console.print(Text(ai_response.get('description', 'Unable to process the request.'), style="yellow"))
-                        else:
-                            command_panel = Panel(
-                                Text(ai_response.get('command', 'No command provided.'), style="white"),
-                                title="🛠️ Command:",
-                                border_style="bold deep_pink3",
-                                style="white"
-                            )
-                            console.print(command_panel)
+                            console.print(hint_panel)
                             
-                            description_panel = Panel(
-                                Text(ai_response.get('description', 'No description provided.'), style="white"),
-                                title="📄 Description:",
-                                border_style="spring_green1",
-                                style="white"
-                            )
-                            console.print(description_panel)
+                            if 'example' in ai_response:
+                                example_panel = Panel(
+                                    Text(ai_response['example'], style="white"),
+                                    title="📚 Example:",
+                                    border_style="bold deep_pink3",
+                                    style="white"
+                                )
+                                console.print(example_panel)
 
-                            execute_choice = Prompt.ask(Text(" Execute this command? (y/n): ", style="spring_green1")).lower()
-
-                            if execute_choice == 'y':
-                                command_output = execute_command(ai_response['command'])
-                                output_panel = Panel(
-                                    Text(command_output, style="white"),
-                                    title="🔍 Command Output:",
+                        elif ai_response['type'] == 'command':
+                            if ai_response.get('command') == 'UNABLE_TO_PROCESS':
+                                console.print(Text(ai_response.get('description', 'Unable to process the request.'), style="yellow"))
+                            else:
+                                command_panel = Panel(
+                                    Text(ai_response.get('command', 'No command provided.'), style="white"),
+                                    title="🛠️ Command:",
+                                    border_style="bold deep_pink3",
+                                    style="white"
+                                )
+                                console.print(command_panel)
+                                
+                                description_panel = Panel(
+                                    Text(ai_response.get('description', 'No description provided.'), style="white"),
+                                    title="📄 Description:",
                                     border_style="spring_green1",
                                     style="white"
                                 )
-                                console.print(output_panel)
+                                console.print(description_panel)
 
-                    console.print()  # Add a blank line for readability
+                                execute_choice = Prompt.ask(Text(" Execute this command? (y/n): ", style="spring_green1")).lower()
 
-                except Exception as e:
-                    console.print(Panel(Text(f"❌ An error occurred: {str(e)}", style="bold red"), border_style="bold red"))
+                                if execute_choice == 'y':
+                                    command_output = execute_command(ai_response['command'])
+                                    output_panel = Panel(
+                                        Text(command_output, style="white"),
+                                        title="🔍 Command Output:",
+                                        border_style="spring_green1",
+                                        style="white"
+                                    )
+                                    console.print(output_panel)
 
-    except KeyboardInterrupt:
-        console.print(Panel(Text("🔚 Session ended by user.", style="bold cyan"), border_style="bold cyan"))
-        sys.exit(0)
+                        console.print()  # Add a blank line for readability
 
+                    except Exception as e:
+                        console.print(Panel(Text(f"❌ An error occurred: {str(e)}", style="bold red"), border_style="bold red"))
 
+        except KeyboardInterrupt:
+            console.print(Panel(Text("🔚 Session ended by user.", style="bold cyan"), border_style="bold cyan"))
+            sys.exit(0)
+    else:
+        print("Usage: comandi -run")
+        sys.exit(1)
 
+def cli_main():
+    main()
 
 if __name__ == "__main__":
-    main()
+    cli_main()
