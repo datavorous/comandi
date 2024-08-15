@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/banner.png" alt="Logo" width="450" height="225" >  
-
 # COMANDI v0.0.2 
 
 Free AI-powered CLI for Programming Support,  
