@@ -6,7 +6,8 @@ Free AI-powered CLI for Programming Support,
 Error Debugging and Automated Instruction Translations. 
 
 <a href="https://app.commanddash.io/agent/github_datavorous_comandi"><img src="https://img.shields.io/badge/AI-Code%20Agent-EB9FDA"></a>
-![Python version](https://img.shields.io/badge/python-3.10%2B-blue)
+![Python version](https://img.shields.io/badge/python-3.10%2B-blue) <br>
+<a href="https://www.producthunt.com/posts/comandi?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-comandi" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=480995&theme=light" alt="Comandi - AI&#0032;CLI&#0032;Tool&#0032;for&#0032;Seamless&#0032;Programming&#0032;&#0038;&#0032;Smart&#0032;Debugging | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </div>
 
 ## ✨ Demo Showcase
