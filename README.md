@@ -12,7 +12,10 @@ Error Debugging and Automated Instruction Translations.
 ## ✨ Demo Showcase
 
 <div align="center"> 
-   
+
+<img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/syntax.gif" alt="demo" width="80%">  <br>
+   <b>⚡ Get syntax highlighted code and debug your files!</b><br><br>
+
 <img src="https://raw.githubusercontent.com/datavorous/comandi/main/imgs/pair_programming.gif" alt="debugging code using it" width="80%">  <br>
    <b>👨‍💻 Fix your code and understand the errors, from the comfort of your terminal!</b><br><br>
    
