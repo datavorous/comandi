@@ -1,30 +1,89 @@
-'''
-The core functionality of the program includes converting human instructions to command-line instructions, providing programming hints and examples, and analyzing file contents for understanding, debugging, and fixing. 
-The program follows a loop that continuously prompts the user for input until the user decides to exit. Depending on the type of user input, the program will either 
-execute a command, analyze a file, or provide hints and examples.
-'''
 import pkg_resources
 import sys
 import subprocess
 import json
 import os
+import platform
+import shutil
 from meta_ai_api import MetaAI
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.panel import Panel
 from rich.align import Align
 from rich.text import Text
+from threading import Thread
+from rich.status import Status
+from rich.spinner import Spinner
+import time
+from rich.syntax import Syntax
+from rich.console import Console
+
 
 # Initialize the rich console
 console = Console()
 
+def get_system_info():
+    info = {}
+    
+    # Get model name
+    try:
+        system = platform.system()
+        if system == "Darwin":
+            info['model'] = subprocess.check_output(["sysctl", "-n", "hw.model"]).decode("utf-8").strip()
+        elif system == "Linux":
+            info['model'] = subprocess.check_output(["cat", "/sys/devices/virtual/dmi/id/product_name"]).decode("utf-8").strip()
+        elif system == "Windows":
+            info['model'] = subprocess.check_output("wmic csproduct get name").decode("utf-8").split("\n")[1].strip()
+        else:
+            info['model'] = "Unknown"
+    except:
+        info['model'] = platform.machine()
 
-'''
-This function is responsible for loading the prompt template from a JSON file named prompt.json. Attempts to open and read the file => 
-If successful, it extracts and returns the prompt_template key from the loaded JSON data. 
-If the file is not found, contains invalid JSON, or is missing the prompt_template key, 
-the function catches these exceptions and displays an appropriate error message to the user via the console, then exits the program.
-'''
+    # Get processor information
+    try:
+        info['processor'] = platform.processor()
+        if info['processor'] == "":
+            info['processor'] = platform.machine()
+    except:
+        info['processor'] = "Unknown"
+
+    # Get storage information
+    try:
+        total, used, free = shutil.disk_usage('/')
+        info['storage_left'] = f"{free // (2**30)} GB"
+    except:
+        info['storage_left'] = "Unknown"
+
+    # Get current directory
+    try:
+        info['current_dir'] = os.getcwd()
+    except:
+        info['current_dir'] = "Unknown"
+
+    return info
+
+def print_introduction():
+    system_info = get_system_info()
+    
+    # Create the intro text
+    intro_text = Text(justify="left")
+    intro_text.append(f"Model: {system_info['model']}\n", style="bold white")
+    intro_text.append(f"Processor: {system_info['processor']}\n", style="bold white")
+    intro_text.append(f"Storage Left: {system_info['storage_left']}\n", style="bold white")
+
+    # Create the panel with a title and border styling
+    intro_panel = Panel(
+        Align.center(intro_text, vertical="middle"),
+        title="comandi v0.0.2",
+        border_style="bold #ffffff",
+        style="bold white"
+    )
+
+    # Print the panel to the console
+    console.print(intro_panel)
+
+
+
 def load_prompt():
     try:
         prompt_path = pkg_resources.resource_filename('comandi', 'prompt.json')
@@ -32,66 +91,25 @@ def load_prompt():
             data = json.load(file)
             return data['prompt_template']
     except FileNotFoundError:
-        console.print("[bold red]Error:[/bold red] prompt.json file not found.")
+        console.print("[bold #ffffff]Error:[/bold #ffffff] prompt.json file not found.")
         sys.exit(1)
     except json.JSONDecodeError:
-        console.print("[bold red]Error:[/bold red] Invalid JSON in prompt.json file.")
+        console.print("[bold #ffffff]Error:[/bold #ffffff] Invalid JSON in prompt.json file.")
         sys.exit(1)
     except KeyError:
-        console.print("[bold red]Error:[/bold red] 'prompt_template' key not found in prompt.json.")
+        console.print("[bold #ffffff]Error:[/bold #ffffff] 'prompt_template' key not found in prompt.json.")
         sys.exit(1)
 
 
-'''
-prints an introductory message to the user when the program starts. 
-creates a styled text block with the program's version, guidelines on how to use the CLI, and commands available to the user. The text is centered and wrapped in a Rich Panel, which is then printed to the console.
-'''
-def print_introduction():
-    intro_text = Text(justify="center")
-    intro_text.append("COMANDI v0.0.2\n\n", style="bold spring_green2")
-    
-    intro_text.append("📋 ")
-    intro_text.append("Guidelines\n", style="bold white")
-    
-    intro_text.append("Type your request for command-line equivalents\n", style="white")
-    intro_text.append("Ask programming questions for hints and examples\n", style="white")
-    intro_text.append("Use 'understand', 'debug', or 'fix' followed by a file path for file analysis\n", style="white")
-    intro_text.append("Type 'quit' or 'exit' to end the session\n\n", style="white")
 
-    intro_panel = Panel(
-        Align.center(intro_text, vertical="middle")
-    )
-
-    console.print(intro_panel)
-
-
-
-'''
-Execute shell commands provided by the user or generated by the AI. 
-It runs the command in a subprocess and captures its output or error messages. 
-The function then returns the command output if it is successful; 
-otherwise, it returns an error message. 
-This function allows the program to interact with the system's shell environment and execute various commands on the user's behalf.
-'''
 def execute_command(command):
-    """Execute shell commands."""
     try:
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         output, error = process.communicate()
         return output.strip() if process.returncode == 0 else f"Error: {error.strip()}"
     except Exception as e:
-        return f"An error occurred while executing the command: {str(e)}"
+        return f"An error occur while executing the command: {str(e)}"
 
-
-'''
-constructs a full prompt by combining the template with the user's input, then sends this prompt to the AI. The function receives and parses the AI's response, extracting useful information like commands, hints, and examples.
-'''
-def get_ai_response(user_input, prompt_template):
-    """Get AI response for user input."""
-    meta = MetaAI()
-    full_prompt = f"{prompt_template}\n\nUser input: {user_input}\n\nResponse:"
-    response = meta.prompt(message=full_prompt)
-    return parse_ai_response(response['message'].strip())
 
 
 # the following funcstions are self explanatory im not documenting this now
@@ -146,7 +164,6 @@ def read_file_contents(file_path, line_numbers=None):
         return f"Error reading file: {str(e)}"
 
 
-
 def analyze_file(file_path, analysis_type, line_range=None):
     """Analyze file contents based on the analysis type and specific line numbers."""
     content = read_file_contents(file_path, line_numbers=line_range)
@@ -167,17 +184,15 @@ def analyze_file(file_path, analysis_type, line_range=None):
     return get_ai_response(prompt, prompt_template)
 
 
-
-
 def display_file_analysis(analysis_result):
     """Display file analysis results using Rich panels."""
     for section, content in analysis_result.items():
         if isinstance(content, list) and content:
             panel = Panel(
-                Text('\n'.join(content), style="white"),
+                Text('\n'.join(content), style="bold white"),
                 title=f"📊 {section}:",
-                border_style="bold spring_green1",
-                style="white"
+                border_style="bold #ffffff",
+                style="bold white"
             )
             console.print(panel)
 
@@ -196,6 +211,15 @@ def parse_ranges(range_str):
 '''
 This function handles file-related commands by determining the type of analysis requested (understand, debug, or fix) and then calling analyze_file() to perform the analysis. If the file does not exist, it prints an error message. If the analysis is successful, it uses display_file_analysis() to show the results to the user. This function serves as a central hub for managing file-related tasks within the program.
 '''
+from rich.syntax import Syntax
+from rich.panel import Panel
+
+def display_example_code(code_example, language="python"):
+    """Display example code with syntax highlighting inside a panel."""
+    syntax = Syntax(code_example, language, theme="github-dark", line_numbers=True)
+    panel = Panel(syntax, title="Example", border_style="bold #ffffff", title_align="left")
+    console.print(panel)
+
 def handle_file_command(command, file_path_and_lines):
     """Handle file-related commands with optional line range."""
     if ':' in file_path_and_lines:
@@ -207,21 +231,46 @@ def handle_file_command(command, file_path_and_lines):
         file_path = file_path_and_lines
         analysis_type = command.split()[0]
         analysis_result = analyze_file(file_path, analysis_type)
-    
+
     if isinstance(analysis_result, str) and analysis_result.startswith("Error:"):
-        console.print(f"[bold red]{analysis_result}[/bold red]")
+        console.print(f"[bold #ffffff]{analysis_result}[/bold #ffffff]")
     else:
         display_file_analysis(analysis_result)
 
+        # Check if the analysis result has an example
+        if 'example' in analysis_result:
+            display_example_code(analysis_result['example'])
+
+# Update get_ai_response to handle and display highlighted code examples
+def get_ai_response(user_input, prompt_template):
+    meta = MetaAI()
+    full_prompt = f"{prompt_template}\n\nUser input: {user_input}\n\nResponse:"
+    
+    response = None
+    
+    def ai_request():
+        nonlocal response
+        response = meta.prompt(message=full_prompt)
+    
+    thread = Thread(target=ai_request)
+    thread.start()
+    
+    with console.status("[bold white]Processing...", spinner="bouncingBar", spinner_style="bold #ffffff"):
+        while thread.is_alive():
+            time.sleep(0.1)
+    
+    thread.join()
+    
+    if response:
+        parsed_response = parse_ai_response(response['message'].strip())
+        # If there's an example, show it inside a panel with syntax highlighting
+        if 'example' in parsed_response:
+            display_example_code(parsed_response['example'])
+        return parsed_response
+    else:
+        return "No response received from AI."
 
 
-
-
-'''
-The main function is the entry point of the program and manages the overall flow of the CLI. It starts by loading the prompt template and printing the introduction. The function then enters a loop where it continuously prompts the user for input.
-Depending on the input, it either handles file-related commands, sends the input to the AI for processing, or exits the program. 
-The main function ensures that the program operates as an interactive tool, responding to user input in real-time and handling various tasks as specified by the user.
-'''
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == '-run':
         prompt_template = load_prompt()
@@ -229,11 +278,15 @@ def main():
 
         try:
             while True:
-                user_input = Prompt.ask(Text("::", style="green1"))
+                user_input = Prompt.ask(Text("::", style="bold #ffffff"))
 
                 if user_input.lower() in ['quit', 'exit']:
-                    console.print(Text("🚀 Goodbye! 👋 See you soon!", style="bold red1"))
+                    console.print(Text("Goodbye! See you soon!", style="bold #ffffff"))
                     break
+
+                if user_input.lower() == 'help':
+                    display_help()
+                    continue
 
                 if user_input.startswith(('understand ', 'debug ', 'fix ')):
                     command, file_path_and_lines = user_input.split(maxsplit=1)
@@ -244,39 +297,39 @@ def main():
 
                         if ai_response['type'] == 'hint':
                             hint_panel = Panel(
-                                Text(ai_response['hint'], style="white"),
-                                title="💡 Programming Hint:",
-                                border_style="bold spring_green1",
-                                style="white"
+                                Text(ai_response['hint'], style="bold white"),
+                                title="Explanation",
+                                border_style="bold #ffffff",
+                                style="bold white"
                             )
                             console.print(hint_panel)
                             
-                            if 'example' in ai_response:
+                            '''if 'example' in ai_response:
                                 example_panel = Panel(
-                                    Text(ai_response['example'], style="white"),
-                                    title="📚 Example:",
-                                    border_style="bold deep_pink3",
-                                    style="white"
+                                    Text(ai_response['example'], style="bold white"),
+                                    title="Example",
+                                    border_style="bold #ffffff",
+                                    style="bold white"
                                 )
-                                console.print(example_panel)
+                                console.print(example_panel)'''
 
                         elif ai_response['type'] == 'command':
                             if ai_response.get('command') == 'UNABLE_TO_PROCESS':
-                                console.print(Text(ai_response.get('description', 'Unable to process the request.'), style="yellow"))
+                                console.print(Text(ai_response.get('description', 'Unable to process the request.'), style="bold #ffffff"))
                             else:
                                 command_panel = Panel(
-                                    Text(ai_response.get('command', 'No command provided.'), style="white"),
+                                    Text(ai_response.get('command', 'No command provided.'), style="bold white"),
                                     title="🛠️ Command:",
-                                    border_style="bold deep_pink3",
-                                    style="white"
+                                    border_style="bold #ffffff",
+                                    style="bold white"
                                 )
                                 console.print(command_panel)
                                 
                                 description_panel = Panel(
-                                    Text(ai_response.get('description', 'No description provided.'), style="white"),
-                                    title="📄 Description:",
-                                    border_style="spring_green1",
-                                    style="white"
+                                    Text(ai_response.get('description', 'No description provided.'), style="bold white"),
+                                    title="Description",
+                                    border_style="bold #ffffff",
+                                    style="bold white"
                                 )
                                 console.print(description_panel)
 
@@ -285,17 +338,17 @@ def main():
                                 if execute_choice == 'y':
                                     command_output = execute_command(ai_response['command'])
                                     output_panel = Panel(
-                                        Text(command_output, style="white"),
-                                        title="🔍 Command Output:",
+                                        Text(command_output, style="bold white"),
+                                        title="Command Output",
                                         border_style="spring_green1",
-                                        style="white"
+                                        style="bold white"
                                     )
                                     console.print(output_panel)
 
                         console.print()  # Add a blank line for readability
 
                     except Exception as e:
-                        console.print(Panel(Text(f"❌ An error occurred: {str(e)}", style="bold red"), border_style="bold red"))
+                        console.print(Panel(Text(f"❌ An error occur#ffffff: {str(e)}", style="bold #ffffff"), border_style="bold #ffffff"))
 
         except KeyboardInterrupt:
             console.print(Panel(Text("🔚 Session ended by user.", style="bold cyan"), border_style="bold cyan"))
@@ -303,6 +356,21 @@ def main():
     else:
         print("Usage: comandi -run")
         sys.exit(1)
+
+def display_help():
+    help_text = Text()
+    help_text.append("Comandi Help:\n\n", style="bold")
+    help_text.append("• Type natural language queries to get command suggestions or programming help\n")
+    help_text.append("• Use 'understand', 'debug', or 'fix' followed by a file path for file analysis\n")
+    help_text.append("• Type 'quit' or 'exit' to end the session\n")
+    
+    help_panel = Panel(
+        help_text,
+        title="Help",
+        border_style="bold #ffffff",
+        expand=False
+    )
+    console.print(help_panel)
 
 def cli_main():
     main()
