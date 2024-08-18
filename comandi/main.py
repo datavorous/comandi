@@ -1,3 +1,5 @@
+#TODO: write docs and comments 
+
 import pkg_resources
 import sys
 import subprocess
@@ -241,7 +243,7 @@ def handle_file_command(command, file_path_and_lines):
         if 'example' in analysis_result:
             display_example_code(analysis_result['example'])
 
-# Update get_ai_response to handle and display highlighted code examples
+
 def get_ai_response(user_input, prompt_template):
     meta = MetaAI()
     full_prompt = f"{prompt_template}\n\nUser input: {user_input}\n\nResponse:"
