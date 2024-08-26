@@ -1,6 +1,6 @@
 #TODO: write docs and comments 
 
-import pkg_resources
+# import pkg_resources
 import sys
 import subprocess
 import json
@@ -19,6 +19,7 @@ from rich.spinner import Spinner
 import time
 from rich.syntax import Syntax
 from rich.console import Console
+import importlib.resources as resources
 
 
 # Initialize the rich console
@@ -88,7 +89,8 @@ def print_introduction():
 
 def load_prompt():
     try:
-        prompt_path = pkg_resources.resource_filename('comandi', 'prompt.json')
+        #before: prompt_path = pkg_resources.resource_filename('comandi','prompt.json')
+        prompt_path = resources.path('comandi', 'prompt.json')
         with open(prompt_path, 'r') as file:
             data = json.load(file)
             return data['prompt_template']
